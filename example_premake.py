@@ -5,9 +5,11 @@ BINARY = "HelloWorld"
 
 import sys
 if sys.argv[1] == "bootstrap":
-    # download xx.py
+    import requests
+    url = "https://raw.githubusercontent.com/8bitkitkat/xx/master/xx.py"
+    r = requests.get(url, allow_redirects=True)
+    open("xx.py", "wb").write(r.content)
     exit(0)
-    pass
 
 
 import xx as x
