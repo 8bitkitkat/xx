@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
+BINARY = "HelloWorld"
+
+
 import sys
 if sys.argv[1] == "bootstrap":
-    # TODO: download xx.py
+    # download xx.py
     exit(0)
     pass
 
@@ -13,6 +16,7 @@ Action = x.Action
 
 cleanFiles = [
     "build",
+    "*.make",
     "Makefile",
 ]
 
@@ -24,19 +28,20 @@ def clean():
 
 @Action("setup", "setup project for building")
 def setup():
-    print("setting project up for build")
+    x.osrun("premake5 gmake2")
 
 
 @Action("build|b")
 def build():
     setup()
-    print("building project")
+    x.osrun("make")
 
 
 @Action("run|r")
 def run():
     build()
-    print("running project")
+    print()
+    x.osrun(f"./build/Debug/{BINARY}\n")
 
 
 @Action("cb", "clean; build")
