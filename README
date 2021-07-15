@@ -1,0 +1,6 @@
+Simple helper library for easy cleaning, building, running
+
+like make but python,
+and a little more portable
+
+try running './example.py help'
