@@ -5,6 +5,11 @@ import os
 import glob
 import shutil
 
+
+# if any path to be deleted has a substring of one of these it is ignored
+removeIgnoredPaths = []
+
+
 actions = {}
 def Action(tag, desc=""):
     def _(f):
@@ -18,18 +23,39 @@ def osrun(cmd):
     os.system(cmd)
 
 
+def __remove(path):
+    print(f"deleting {path}")
+    if os.path.isfile(path) or os.path.islink(path):
+        os.remove(path)  # remove the file
+    elif os.path.isdir(path):
+        shutil.rmtree(path)  # remove dir and all contains
+    else:
+        raise ValueError(f"path '{path}' is not a file or dir.")
+
+
+def remove_noignore(path):
+    paths = glob.glob(path)
+    for path in paths:
+        if not os.path.exists(path):
+            continue
+        __remove(path)
+
+
 def remove(path):
     paths = glob.glob(path)
     for path in paths:
-        print(f"rm -rf {path}")
+        cont = False
+        for ignored in removeIgnoredPaths:
+            if ignored in path:
+                cont = True
+                break
+        if cont:
+            continue
+
         if not os.path.exists(path):
             continue
-        if os.path.isfile(path) or os.path.islink(path):
-            os.remove(path)  # remove the file
-        elif os.path.isdir(path):
-            shutil.rmtree(path)  # remove dir and all contains
-        else:
-            raise ValueError(f"path '{path}' is not a file or dir.")
+
+        __remove(path)
 
 
 def remove_paths(paths):
@@ -40,7 +66,7 @@ def remove_paths(paths):
 def mkdir(path):
     print(f"mkdir -p {path}")
     if not os.path.exists(path):
-        os.mkdir(path)
+        os.makedirs(path)
 
 
 def chdir(path):
