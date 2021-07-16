@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import sys
-if sys.argv[1] == "bootstrap":
+import os
+if not os.path.exists("xx.py"):
+    print("downloading xx.py ... ", end="", flush=True)
     import requests
     url = "https://raw.githubusercontent.com/8bitkitkat/xx/master/xx.py"
     r = requests.get(url, allow_redirects=True)
     open("xx.py", "wb").write(r.content)
-    exit(0)
+    print("done")
 
 
 import xx as x
